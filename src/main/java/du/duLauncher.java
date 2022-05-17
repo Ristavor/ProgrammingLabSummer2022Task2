@@ -5,7 +5,7 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 public class duLauncher {
