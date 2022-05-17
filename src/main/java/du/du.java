@@ -22,36 +22,97 @@
 
 package du;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.io.File;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+
 public class du {
-    public ArrayList<BigDecimal> size(List<String> fileNames, boolean format, boolean sum, boolean si) {
-        ArrayList<BigDecimal> list = new ArrayList<>();
-        BigDecimal x = BigDecimal.valueOf(1024);
-        if (si) x = BigDecimal.valueOf(1000);
+
+    public short filesSize(List<String> fileNames, boolean format, boolean sum, boolean inBits) {
+        ArrayList<Pair<BigDecimal, String>> result = new ArrayList<>();
+        List<String> units;
+        short Ratio;
+
+        if (inBits) {
+            units = List.of("Bit", "KBit", "MBit", "GBit");
+            Ratio = 1000;
+        } else {
+            units = List.of("B", "KB", "MB", "GB");
+            Ratio = 1024;
+        }
+
+
         for (String i : fileNames) {
             File file = new File(i);
-            BigDecimal s = BigDecimal.valueOf(file.length());
-            if (format) {
-                while (Integer.parseInt(String.valueOf(s.divide(x))) > 1) {
-                    s = s.divide(x).setScale(3, RoundingMode.HALF_EVEN);
-                }
-            }
-            list.add(s);
-        }
-        BigDecimal h = new BigDecimal(0);
-        if (sum) {
-            for (BigDecimal i : list) {
-                h = h.add(i);
-            }
-            list.clear();
-            list.add(h);
-        }
-        System.out.print(list);
-        return list;
+            int cntUnit;
+            BigDecimal size;
 
+            if (file.isFile()) size = BigDecimal.valueOf(file.length());
+            else size = BigDecimal.valueOf(getDirSize(file));
+
+            if (inBits) size = size.multiply(BigDecimal.valueOf(8));
+
+            if (sum) {
+                cntUnit = 0;
+            } else {
+                Pair<BigDecimal, Integer> miniResult = formatSize(size, format, Ratio);
+                size = miniResult.getLeft();
+                cntUnit = miniResult.getRight();
+            }
+            result.add(Pair.of(size, units.get(cntUnit)));
+        }
+
+        if (sum) {
+            BigDecimal size = BigDecimal.valueOf(0);
+            for (Pair<BigDecimal, String> i : result) {
+                size = size.add(i.getLeft());
+            }
+            result.clear();
+            int cntUnit;
+            Pair<BigDecimal, Integer> miniResult = formatSize(size, format, Ratio);
+            size = miniResult.getLeft();
+            cntUnit = miniResult.getRight();
+            result.add(Pair.of(size, units.get(cntUnit)));
+        }
+
+        System.out.print(result);
+        return 0;
     }
+
+    static private long getDirSize(File dir) {
+        long length = 0;
+        File[] files = dir.listFiles();
+
+        assert files != null;
+        for (File file : files) {
+            if (file.isFile()) {
+                length += file.length();
+            } else {
+                length += getDirSize(file);
+            }
+        }
+        return length;
+    }
+
+    static private Pair<BigDecimal, Integer> formatSize(BigDecimal size, boolean format, short Ratio) {
+        int cntUnit;
+        if (format) {
+            cntUnit = 0;
+            while (Double.parseDouble(String.valueOf(size.divide(BigDecimal.valueOf(Ratio)))) >= 1) {
+                cntUnit++;
+                size = size.divide(BigDecimal.valueOf(Ratio));
+            }
+        } else {
+            size = size.divide(BigDecimal.valueOf(Ratio));
+            cntUnit = 1;
+        }
+        return Pair.of(size.setScale(2, RoundingMode.DOWN), cntUnit);
+    }
+
+
 }
