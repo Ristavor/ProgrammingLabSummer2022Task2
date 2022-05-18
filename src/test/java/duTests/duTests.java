@@ -63,10 +63,18 @@ public class duTests {
 
     @Test
     void someFilesTests() throws IOException {
+        String dirInp = "src/test/resources/input/" + "4someDirsTests" + "/";
+        String dirExp = "src/test/resources/expected/" + "4someDirsTests" + "/";
+        assertEquals(Files.readString(Path.of(dirExp + "1.txt")), getter(List.of(dirInp + "1/1", dirInp + "1/2"), false, false, false));
+        assertEquals(Files.readString(Path.of(dirExp + "2.txt")), getter(List.of(dirInp + "2/1", dirInp + "2/2", dirInp + "2/3"), false, false, false));
     }
 
     @Test
     void someDirsTests() throws IOException {
+        String dirInp = "src/test/resources/input/" + "3someFilesTests" + "/";
+        String dirExp = "src/test/resources/expected/" + "3someFilesTests" + "/";
+        assertEquals(Files.readString(Path.of(dirExp + "1.txt")), getter(List.of(dirInp + "1/1", dirInp + "1/2", dirInp + "1/3", dirInp + "1/4"), false, false, false));
+        assertEquals(Files.readString(Path.of(dirExp + "2.txt")), getter(List.of(dirInp + "2/1", dirInp + "2/2", dirInp + "2/3"), false, false, false));
     }
 
     @Test
