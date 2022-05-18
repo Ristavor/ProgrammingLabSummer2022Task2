@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class duTests {
@@ -44,7 +46,7 @@ public class duTests {
             File[] inpFiles = new File(String.format("%s%d", dirInp, i)).listFiles();
             assert inpFiles != null;
             for (File j : inpFiles) inp.add(j.toString());
-            System.out.print(inp);
+            inp = inp.stream().sorted().collect(Collectors.toList());
             assertEquals(Files.readString(Path.of(exp)), getter(inp, h, c, si));
         }
     }
