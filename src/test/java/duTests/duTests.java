@@ -43,8 +43,7 @@ public class duTests {
             File[] inpFiles = new File(String.format("%s%d", dirInp, i)).listFiles();
             assert inpFiles != null;
             for (File j : inpFiles) inp.add(j.toString());
-            String s = getter(inp, h, c, si);
-            assertEquals(Files.readString(Path.of(exp)), s);
+            assertEquals(Files.readString(Path.of(exp)), getter(inp, h, c, si));
         }
     }
 
