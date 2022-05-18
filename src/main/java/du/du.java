@@ -35,8 +35,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class du {
 
-    public void finder(List<String> fileNames, boolean humanReadable, boolean total, boolean si, Outer outer)
-            throws IOException {
+    public void finder(List<String> fileNames, boolean humanReadable, boolean total, boolean si, Outer outer) throws IOException {
         BigDecimal inSum = BigDecimal.valueOf(0); //переменная в случае наличия флага total
         List<String> units; //хранение единиц измерения
         short ratio; //система счисления
@@ -50,14 +49,11 @@ public class du {
             }
         }
 
-        try {
-            if (!errorList.isEmpty()) throw new FileNotFoundException("There is no such file/files");
-        } catch (FileNotFoundException e) {
+        if (!errorList.isEmpty()) {
             StringBuilder str = new StringBuilder();
             for (String i : errorList) str.append(i).append(", ");
             str.delete(str.length() - 2, str.length());
-            System.err.println(str + " -> " + e.getMessage());
-            return;
+            throw new FileNotFoundException("There is no such file/files -> " + str);
         }
 
 
