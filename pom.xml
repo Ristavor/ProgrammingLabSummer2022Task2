@@ -10,8 +10,8 @@
     <properties>
         <jvm.version>17</jvm.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
-        <maven.compiler.source>${jvm.version}</maven.compiler.source>
-        <maven.compiler.target>${jvm.version}</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
