@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,6 +44,7 @@ public class duTests {
             File[] inpFiles = new File(String.format("%s%d", dirInp, i)).listFiles();
             assert inpFiles != null;
             for (File j : inpFiles) inp.add(j.toString());
+            System.out.print(inp);
             assertEquals(Files.readString(Path.of(exp)), getter(inp, h, c, si));
         }
     }
