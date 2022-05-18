@@ -63,12 +63,12 @@ public class duTests {
 
     @Test
     void someFilesTests() throws IOException {
-        testerSomeFiles("3SomeFilesTests", 2, false, false, false);
+        testerSomeFiles("3SomeFilesTests", 1, false, false, false);
     }
 
     @Test
     void someDirsTests() throws IOException {
-        testerSomeFiles("4someDirsTests", 2, false, false, false);
+        testerSomeFiles("4someDirsTests", 1, false, false, false);
     }
 
     @Test
