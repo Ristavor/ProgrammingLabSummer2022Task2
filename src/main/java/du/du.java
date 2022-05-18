@@ -22,6 +22,7 @@
 
 package du;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -32,14 +33,33 @@ import java.io.FileNotFoundException;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-
 public class du {
 
-    public void filesSize(List<String> fileNames, boolean humanReadable, boolean total, boolean si){
-        ArrayList<Pair<BigDecimal, String>> sizes = new ArrayList<>(); //храним данные на вывод
+    public void finder(List<String> fileNames, boolean humanReadable, boolean total, boolean si, Outer outer)
+            throws IOException {
         BigDecimal inSum = BigDecimal.valueOf(0); //переменная в случае наличия флага total
         List<String> units; //хранение единиц измерения
         short ratio; //система счисления
+
+        //проверка наличия файлов, поданных на вход
+        ArrayList<String> errorList = new ArrayList<>();
+        for (String i : fileNames) {
+            File checker = new File(i);
+            if (!checker.exists()) {
+                errorList.add(i);
+            }
+        }
+
+        try {
+            if (!errorList.isEmpty()) throw new FileNotFoundException("There is no such file/files");
+        } catch (FileNotFoundException e) {
+            StringBuilder str = new StringBuilder();
+            for (String i : errorList) str.append(i).append(", ");
+            str.delete(str.length() - 2, str.length());
+            System.err.println(str + " -> " + e.getMessage());
+            return;
+        }
+
 
 
         //настраиваем единицы измерения в зависимости от флагов si и h
@@ -57,6 +77,7 @@ public class du {
         for (String i : fileNames) {
             File file = new File(i);
 
+
             int cntUnit; //счётчик для выбора отображения единиц измерения
             BigDecimal fileSize;
 
@@ -68,32 +89,25 @@ public class du {
             if (si) fileSize = fileSize.multiply(BigDecimal.valueOf(8)); //в формате битовом нет байтов
 
             if (total) {
-                inSum = inSum.add(fileSize); //для суммы не нужно заполнять sizes
+                inSum = inSum.add(fileSize); //для суммы
             } else {
-                //заполняем sizes
                 Pair<BigDecimal, Integer> formattedResult = formatSize(fileSize, humanReadable, ratio);
                 fileSize = formattedResult.getLeft();
                 cntUnit = formattedResult.getRight();
-                sizes.add(Pair.of(fileSize, units.get(cntUnit)));
+                String s = fileSize.toString() + units.get(cntUnit);
+                if (fileNames.indexOf(i) != fileNames.size() - 1) s += System.lineSeparator();
+                outer.out(s);
             }
         }
 
         if (total) {
             int cntUnit;
-            //форматируем полученную сумму и заносим её в sizes
+            //форматируем полученную сумму
             Pair<BigDecimal, Integer> formattedResult = formatSize(inSum, humanReadable, ratio);
             inSum = formattedResult.getLeft();
             cntUnit = formattedResult.getRight();
-            sizes.add(Pair.of(inSum, units.get(cntUnit)));
+            outer.out(inSum.toString() + units.get(cntUnit));
         }
-
-        //выводим данные на консоль
-        StringBuilder str = new StringBuilder();
-        for (Pair<BigDecimal, String> i : sizes) {
-            str.append(String.format("%s%s\n", i.getLeft().toString(), i.getRight()));
-        }
-        str.delete(str.length() - 1, str.length());
-        System.out.print(str);
     }
 
     //метод для поиска размера директорий
@@ -118,19 +132,20 @@ public class du {
         //если стоит флаг -h, уменьшаем максимально возможно и ведём подсчёт для единиц измерения
         if (format) {
             cntUnit = 0;
-            while (size.divide(BigDecimal.valueOf(ratio), RoundingMode.HALF_EVEN).compareTo(BigDecimal.valueOf(1)) >= 0) {
-                size = size.divide(BigDecimal.valueOf(ratio), RoundingMode.HALF_EVEN);
+            while (size.divide(BigDecimal.valueOf(ratio)).compareTo(BigDecimal.valueOf(1)) >= 0) {
+                size = size.divide(BigDecimal.valueOf(ratio));
                 cntUnit++;
             }
             //если флага -h нет, только переводим в килобайты (килобиты)
         } else {
-            size = size.divide(BigDecimal.valueOf(ratio), RoundingMode.HALF_EVEN);
+            size = size.divide(BigDecimal.valueOf(ratio));
             cntUnit = 1;
         }
         // Повторяем отображение размеров как в системе windows в свойствах файлов
         // Если размер до 10 - 2 знака после запятой.
-        // До 100 - 1 знак. Во всех остальных случаях после запятой нет знаков
-        if (size.compareTo(BigDecimal.valueOf(10)) < 0) size = size.setScale(2, RoundingMode.DOWN);
+        // До 100 - 1 знак. Во всех остальных случаях (или если это байты) после запятой нет знаков
+        if (cntUnit == 0) size = size.setScale(0, RoundingMode.DOWN);
+        else if (size.compareTo(BigDecimal.valueOf(10)) < 0) size = size.setScale(2, RoundingMode.DOWN);
         else if (size.compareTo(BigDecimal.valueOf(100)) < 0) size = size.setScale(1, RoundingMode.DOWN);
         else size = size.setScale(0, RoundingMode.DOWN);
         return Pair.of(size, cntUnit);
