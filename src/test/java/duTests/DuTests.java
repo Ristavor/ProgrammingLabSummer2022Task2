@@ -86,7 +86,6 @@ public class DuTests {
 
     @Test
     void siAndHumanReadableTests() throws IOException {
-        testFiles("10siAndHumanReadableTests", 4, true, false, true);
     }
 
     @Test
