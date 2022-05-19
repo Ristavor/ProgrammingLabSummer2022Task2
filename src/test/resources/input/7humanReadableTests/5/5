@@ -1,0 +1,18 @@
+{
+    "actions": [
+        {
+            "install": {
+                "action": "savePath",
+                "arguments": {
+                    "savePath": "{userappdata}/11bitstudios/Frostpunk",
+                    "type": "folder"
+                }
+            },
+            "languages": [
+                "*"
+            ],
+            "name": "saveFolders"
+        }
+    ],
+    "productId": "1648559910"
+}

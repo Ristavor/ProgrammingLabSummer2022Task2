@@ -60,7 +60,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>du.duLauncher</mainClass>
+                            <mainClass>du.DuLauncher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -1,8 +1,8 @@
 package du;
 
 public class Outer {
-    boolean isConsole = false;
-    public String str = "";
+    private boolean isConsole = false;
+    public StringBuilder str = new StringBuilder();
 
     public Outer() {
     }
@@ -13,12 +13,12 @@ public class Outer {
 
     public void out(String s) {
         if (isConsole) System.out.print(s);
-        else this.str += s;
+        else str.append(s);
     }
 
     public String get(){
-        String s = this.str;
-        this.str = "";
+        String s = str.toString();
+        str.setLength(0);
         return s;
     }
 }
