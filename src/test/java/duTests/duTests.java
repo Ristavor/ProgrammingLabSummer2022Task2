@@ -46,7 +46,6 @@ public class duTests {
             File[] inpFiles = new File(String.format("%s%d", dirInp, i)).listFiles();
             assert inpFiles != null;
             for (File j : inpFiles) inp.add(j.toString());
-            inp = inp.stream().sorted().collect(Collectors.toList());
             assertEquals(Files.readString(Path.of(exp)), getter(inp, h, c, si));
         }
     }
@@ -65,8 +64,10 @@ public class duTests {
     void someFilesTests() throws IOException {
         String dirInp = "src/test/resources/input/" + "4someDirsTests" + "/";
         String dirExp = "src/test/resources/expected/" + "4someDirsTests" + "/";
-        assertEquals(Files.readString(Path.of(dirExp + "1.txt")), getter(List.of(dirInp + "1/1", dirInp + "1/2"), false, false, false));
-        assertEquals(Files.readString(Path.of(dirExp + "2.txt")), getter(List.of(dirInp + "2/1", dirInp + "2/2", dirInp + "2/3"), false, false, false));
+        assertEquals(Files.readString(Path.of(dirExp + "1.txt")),
+                getter(List.of(dirInp + "1/1", dirInp + "1/2"), false, false, false));
+        assertEquals(Files.readString(Path.of(dirExp + "2.txt")),
+                getter(List.of(dirInp + "2/1", dirInp + "2/2", dirInp + "2/3"), false, false, false));
     }
 
     @Test

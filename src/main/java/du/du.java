@@ -140,10 +140,12 @@ public class du {
         // Повторяем отображение размеров как в системе windows в свойствах файлов
         // Если размер до 10 - 2 знака после запятой.
         // До 100 - 1 знак. Во всех остальных случаях (или если это байты) после запятой нет знаков
-        if (cntUnit == 0) size = size.setScale(0, RoundingMode.DOWN);
-        else if (size.compareTo(BigDecimal.valueOf(10)) < 0) size = size.setScale(2, RoundingMode.DOWN);
-        else if (size.compareTo(BigDecimal.valueOf(100)) < 0) size = size.setScale(1, RoundingMode.DOWN);
-        else size = size.setScale(0, RoundingMode.DOWN);
+        int scale;
+        if (cntUnit == 0) scale = 0;
+        else if (size.compareTo(BigDecimal.valueOf(10)) < 0) scale = 2;
+        else if (size.compareTo(BigDecimal.valueOf(100)) < 0) scale = 1;
+        else scale = 0;
+        size = size.setScale(scale, RoundingMode.DOWN);
         return Pair.of(size, cntUnit);
     }
 
