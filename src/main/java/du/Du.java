@@ -111,7 +111,7 @@ public class Du {
         //если стоит флаг -h, уменьшаем максимально возможно и ведём подсчёт для единиц измерения
         if (humanReadable) {
             cntUnit = 0;
-            while (size / ratio >= 1) {
+            while (size / ratio >= 1 && cntUnit <= 3) {
                 size /= ratio;
                 cntUnit++;
             }
