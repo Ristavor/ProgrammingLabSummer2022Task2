@@ -93,7 +93,6 @@ public class Du {
     private static long getDirSize(File dir) {
         long len = 0;
         File[] files = dir.listFiles();
-
         if (files == null) return 0;
         for (File file : files) {
             if (file.isFile()) {
