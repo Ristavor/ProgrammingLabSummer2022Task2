@@ -19,7 +19,7 @@ public class DuLauncher {
         @Option(name = "--si", usage = "use powers of 1000 not 1024")
         private boolean si;
 
-        @Argument(required = true, metaVar = "files[]", usage = "files you want to find size")
+        @Argument(required = true, metaVar = "fileX", usage = "files you want to find size")
         private List<String> files;
 
         private void launch(String[] args) throws IOException {
@@ -33,8 +33,7 @@ public class DuLauncher {
                 return;
             }
 
-            Du program = new Du();
-            program.find(files, humanReadable, total, si, new Outer(true));
+            Du.find(files, humanReadable, total, si, new Outer(true));
         }
 
         public static void main(String[] args) throws IOException {

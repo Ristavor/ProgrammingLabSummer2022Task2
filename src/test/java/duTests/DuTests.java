@@ -8,21 +8,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DuTests {
 
-    static Du program = new Du();
-
     static Outer out = new Outer();
 
     private static String getter(List<String> files, boolean h, boolean c, boolean si) throws IOException {
-        program.find(files, h, c, si, out);
-        return out.get();
+        Du.find(files, h, c, si, out);
+        String s = out.get();
+        out.clear();
+        return s;
     }
 
     static void testFiles(String folder, int cnt, boolean h, boolean c, boolean si)
@@ -101,7 +101,7 @@ public class DuTests {
 
     @Test
     void errorTests() {
-        assertThrows(FileNotFoundException.class, () -> program.
+        assertThrows(FileNotFoundException.class, () -> Du.
                 find(List.of("xxx"), false, false, false, new Outer(true)));
     }
 

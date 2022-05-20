@@ -23,32 +23,28 @@
 package du;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Locale;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.commons.lang3.tuple.Pair;
+import java.math.RoundingMode;
 
 public class Du {
     private static final List<String> units = List.of("B", "KB", "MB", "GB");
-    private static boolean humanReadable;
-    private static short ratio;
-    private static Outer outer;
+    private static boolean humanReadable; //флаг использования байтов, килобайтов и т.д.
+    private static short ratio; //система счисления
+    private static Outer outer; //переменная, для определения, как осуществлять вывод
 
 
-    public void find(List<String> fileNames, boolean h, boolean total, boolean si, Outer out) throws IOException {
+    public static void find(List<String> fileNames, boolean h, boolean total, boolean si, Outer out) throws IOException {
+        //стартовый блок записи входных данных и объявления переменных
+        //total - флаг суммы, si - флаг основания 1000 вместо 1024
         humanReadable = h;
         outer = out;
-        //система счисления
         if (si) {
             ratio = 1000;
         } else {
@@ -56,7 +52,7 @@ public class Du {
         }
         double inSum = 0.0; //переменная в случае наличия флага total (суммы вместо по-отдельности)
 
-        //проверка наличия файлов, поданных на вход, и возврат ошибки в случае отсутствия каких-либо файлов
+        //блок проверки перед стартом основного блока. Проверяем наличие поданных на вход файлов
         StringBuilder errorStr = new StringBuilder();
         for (String i : fileNames) {
             File checker = new File(i);
@@ -64,12 +60,13 @@ public class Du {
                 errorStr.append(i).append(", ");
             }
         }
+        //возврат ошибки в случае отсутствия каких-либо файлов
         if (!errorStr.isEmpty()) {
             errorStr.delete(errorStr.length() - 2, errorStr.length());
             throw new FileNotFoundException("There is no such file/files -> " + errorStr);
         }
 
-
+        //основной блок
         for (String i : fileNames) {
             File file = new File(i);
             double fileSize;
@@ -77,7 +74,7 @@ public class Du {
             //проверка на то, файл это или директория
             BasicFileAttributes basicFileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
             if (basicFileAttributes.isRegularFile()) fileSize = (double) basicFileAttributes.size();
-            else fileSize = (double )getDirSize(file);
+            else fileSize = (double) getDirSize(file);
 
             if (total) {
                 inSum += fileSize; //для суммы
@@ -108,9 +105,9 @@ public class Du {
         return len;
     }
 
-    //метод для форматирования размера файла в зависимости от флагов (+единиц измерения)
+    //метод для форматирования размера файла в зависимости от флагов
     private static void formatSize(Double size, int index, int indexOfLast) {
-        int cntUnit;
+        byte cntUnit;
         //если стоит флаг -h, уменьшаем максимально возможно и ведём подсчёт для единиц измерения
         if (humanReadable) {
             cntUnit = 0;
@@ -118,7 +115,7 @@ public class Du {
                 size /= ratio;
                 cntUnit++;
             }
-            //если флага -h нет, только переводим в килобайты (килобиты)
+            //если флага -h нет, только переводим в килобайты
         } else {
             size /= ratio;
             cntUnit = 1;

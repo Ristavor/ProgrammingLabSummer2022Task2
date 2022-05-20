@@ -1,8 +1,8 @@
 package du;
 
 public class Outer {
-    private boolean isConsole = false;
-    public StringBuilder str = new StringBuilder();
+    private boolean isConsole = false; //хранит в себе указание, идёт ли вывод в консоль
+    private final StringBuilder str = new StringBuilder(); //требуется в случаях вывода в String
 
     public Outer() {
     }
@@ -20,5 +20,9 @@ public class Outer {
         String s = str.toString();
         str.setLength(0);
         return s;
+    }
+
+    public void clear(){
+        str.setLength(0);
     }
 }
