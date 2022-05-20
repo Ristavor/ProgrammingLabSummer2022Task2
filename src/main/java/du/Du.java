@@ -134,7 +134,7 @@ public class Du {
 
         //вывод
         DecimalFormat formatter = new DecimalFormat(scale, new DecimalFormatSymbols(Locale.ENGLISH));
-        formatter.setRoundingMode(RoundingMode.DOWN);
+        formatter.setRoundingMode(RoundingMode.HALF_EVEN);
         String s = formatter.format(size);
         if (humanReadable) s += units.get(cntUnit);
         if (index != indexOfLast) s += System.lineSeparator();
